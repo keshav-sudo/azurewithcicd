@@ -7,8 +7,9 @@ on:
   workflow_dispatch:
 
 env:
-  DOCKER_IMAGE_NAME: azurecicd  # Docker Hub repo name
-  AZURE_WEBAPP_NAME: azurecicd  # Azure Web App name (Same)
+  DOCKER_IMAGE_NAME: azurecicd
+  DOCKER_USERNAME: keshavshrma  # <-- Your Docker Hub username
+  AZURE_WEBAPP_NAME: azurecicd
 
 jobs:
   build-and-push:
@@ -32,7 +33,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:latest
+          tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:latest
 
   deploy-to-azure:
     runs-on: ubuntu-latest
@@ -42,15 +43,13 @@ jobs:
       - name: Login to Azure using Service Principal
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy to Azure Web App (Docker)
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          images: ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:latest
+          images: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:latest
 
       - name: Azure logout
         run: az logout
