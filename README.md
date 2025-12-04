@@ -16,7 +16,7 @@ A simple RESTful API built with TypeScript, Express, and MongoDB for managing no
 - `GET /health` - Health check
 - `GET /api/notes` - Get all notes
 - `GET /api/notes/:id` - Get a single note
-- `POST /api/notes` - Create a new note
+- `POST /api/notes` - Create a new notevv  
 - `PUT /api/notes/:id` - Update a note
 - `DELETE /api/notes/:id` - Delete a note
 
